@@ -1,0 +1,193 @@
+\documentclass[a4paper,11pt,oneside, table]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{imakeidx}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{csquotes}
+\usepackage{caption}
+\usepackage{xcolor}
+\captionsetup[table]{labelfont=it}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={AUSL Piacenza},
+    pdfpagemode=FullScreen,
+    }
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\newtheorem{nota}{Nota}
+
+\usepackage[italian]{babel}
+\usepackage[
+  backend=bibtex,
+  style=numeric,
+  sorting=ydnt
+  ]{biblatex}
+\addbibresource{quotes.bib}
+\makeindex
+
+\newcommand{\putimage}[4] {
+	\begin{figure}[H]
+	    \centering
+	    \includegraphics[width={#4}\linewidth]{#1}
+	    \caption{#2}\label{#3}
+	\end{figure}
+}
+
+\newcommand{\putsubimage}[5] {
+  \begin{minipage}{{#4}\linewidth}
+	    \centering
+      \includegraphics[width={#5}\linewidth]{#1}
+	    \caption{#2}\label{#3}
+	\end{minipage}
+}
+
+\newcommand{\putimagecouple}[2] {
+  \begin{figure}[!htb]
+      \centering
+      #1
+      \hspace{0.5cm}
+      #2
+  \end{figure}
+}
+
+\newcommand{\putimagequadruple}[4] {
+  \begin{figure}[!htb]
+      \centering
+      #1
+      \hspace{0.5cm}
+      #2
+      \linebreak
+      #3
+      \hspace{0.5cm}
+      #4
+  \end{figure}
+}
+
+\begin{document}
+    \begin{titlepage}
+        \noindent
+        \begin{minipage}[t]{0.19\textwidth}
+            \vspace{-4mm}{\includegraphics[scale=1.15]{logo_unimib.pdf}}
+        \end{minipage}
+        \begin{minipage}[t]{0.81\textwidth}
+        {
+                \setstretch{1.42}
+                {\textsc{Università degli Studi di Milano - Bicocca}} \\
+                \textbf{Scuola di Scienze} \\
+                \textbf{Dipartimento di Informatica, Sistemistica e Comunicazione} \\
+                \textbf{Corso di laurea magistrale in Informatica} \\
+                \par
+        }
+        \end{minipage}
+    	\vspace{40mm}
+    	\begin{center}
+            {\LARGE{
+                    \setstretch{1.2}
+                    \textbf{Progetto di Architetture del Software}
+                    \par
+            }}
+        \end{center}
+        
+        \vspace{50mm}
+        
+        \vspace{15mm}
+
+        \begin{flushright}
+            {\large \textbf{Relazione di:}} \\
+            \large{Refolli Francesco} \large{865955}
+        \end{flushright}
+        
+        \vspace{40mm}
+        \begin{center}
+            {\large{\bf Anno Accademico 2024-2025}}
+        \end{center}
+        \restoregeometry
+    \end{titlepage}
+
+    \printindex
+    \tableofcontents
+    \renewcommand{\baselinestretch}{1.5}
+
+\section{Introduzione}
+
+\subsection{Traccia}
+
+Si deve progettare e realizzare un sistema di \colorbox{cyan}{monitoraggio remoto} della salute di \colorbox{yellow}{pazienti} e di \colorbox{cyan}{teleriabilitazione} in previsione di un intervento chirurgico.
+I pazienti devono essere monitorati per i \colorbox{red}{parametri fisiologici} e rispetto alle \colorbox{red}{attività della vita quotidiana}, inclusa \colorbox{cyan}{l'identificazione} del fatto che il paziente svolge le \colorbox{red}{attività previste dal piano di riabilitazione}.
+Se alcuni parametri rilevati superano delle \colorbox{red}{soglie}, il sistema \colorbox{cyan}{deve inviare un allarme al medico curante}, \colorbox{yellow}{il quale deve mettersi in contatto con il paziente attraverso una chiamata}.
+Si deve progettare un sistema di telemonitoraggio che:
+
+\begin{enumerate}
+  \item acquisisce \textit{in tempo reale} i dati dai sensori secondo tempistiche definite secondo il piano terapeutico del paziente.
+  \item supporta il medico nella ridefinizione del piano terapeutico (comporta la variazione delle frequenze di acquisizione dei parametri fisiologici).
+  \item deve automaticamente attuare il nuovo piano terapeutico.
+  \item controlla se si verificano situazioni anomale (valori dei parametri fisiologici al di fuori delle soglie).
+  \item nel caso di situazioni anomale, identifica un medico di turno affinché si rechi fisicamente dal paziente per una visita Nel caso di situazioni di allarme (tipo codice rosso), identifica l'ambulanza pi\`u vicina e l'ospedale pi\`u vicino in cui trasportare il paziente.
+  \item notifica il medico di turno identificato inviandogli la cartella sanitaria.
+  \item consente al medico di turno di inviare i parametri rilevati, la diagnosi ed altre informazioni relative allo stato di salute del paziente.
+  \item acquisisce dalla piattaforma di tracciamento le informazioni delle attività della vita quotidiana svolte.
+  \item verifica a fine giornata se nei momenti in cui doveva svolgere degli esercizi di riabilitazione, il paziente li ha svolto realmente.
+\end{enumerate}
+
+\subsection{Legenda}
+
+\begin{itemize}
+  \item \colorbox{cyan}{azioni}
+  \item \colorbox{yellow}{attori}
+  \item \colorbox{red}{dati}
+\end{itemize}
+
+\section{Architettura del Problema}
+
+\subsection{Assunzioni}
+
+\paragraph{Vocabolario}
+\begin{itemize}
+  \item La nomenclatura dei medici \`e la seguente: il medico curante \`e definito \textbf{Medico di Base} (o MB), quello di turno \`e il \textbf{Medico di Turno} (o MT).
+\end{itemize}
+
+\paragraph{Altro}
+\begin{itemize}
+  \item Il Medico di Turno, l'Ambulanza e l'Ospedale possono trovarsi al momento della chiamata in localit\`a diverse.
+  \item Il Medico di Turno ha un elenco di destinatari a cui inviare i dati (specialisti, centralina AUSL) che non comprende il Medico di Base in quanto si assume che egli abbia accesso alle informazioni del suo paziente (aggiornate dal sistema).
+  \item Il Piano Terapeutico definisce il monitoraggio di un parametro assieme alle sue soglie (min, max) di normalit\`a e al codice anomalia da assegnare in caso di superamento delle soglie.
+  \item In caso di pi\`u soglie superate, il codice assegnato all'anomalia \`e quello pi\`u grave tra le violazioni.
+  \item Il Medico di Turno termina la gestione dell'anomalia manualmente e pu\`o aggiungere una diagnosi alla cartella clinica del paziente.
+  \item I dati rilevati dai sensori dei parametri sanitari sono salvati (cifrati) nel sistema per permettere al Medico di Turno e al Medico di Base di accedere allo storico recente (< 1 Mese) del paziente.
+  \item L'anomalia gestita \`e salvata nello storico delle anomalia a supporto del Medico di Base (e del Medico di Turno nelle future anomalie).
+\end{itemize}
+
+\subsection{Casi d'Uso}
+
+\putimage{images/Diagramma dei Casi d'Uso.png}{Diagramma dei Casi d'Uso}{png:diagramma-dei-casi-duso}{1}
+
+\subsection{Dati del Problema}
+
+\putimage{images/Diagramma dei Dati.png}{Diagramma dei Dati}{png:diagramma-dei-dati}{1}
+
+\subsection{Attivita' dei Casi d'Uso}
+
+\putimage{images/Diagramma delle Attivita'/Acquisizione Parametro Sanitario.png}{Acquisizione Parametro Sanitario}{png:act:acquisizione-parametro-sanitario}{1}
+\putimage{images/Diagramma delle Attivita'/Acquisizione ADL.png}{Acquisizione ADL}{png:act:acquisizione-adl}{1}
+\putimage{images/Diagramma delle Attivita'/Acquisizione Attivita' Motoria.png}{Acquisizione Attivit\`a Motoria}{png:act:acquisizione-attivita-motoria}{1}
+\putimage{images/Diagramma delle Attivita'/Invia Dati Paziente.png}{Invia Dati Paziente}{png:act:invia-dati-paziente}{1}
+\putimage{images/Diagramma delle Attivita'/Monitoraggio Anomalie Sanitarie.png}{Monitoraggio Anomalie Sanitarie}{png:act:monitoraggio-anomalie-sanitarie}{1}
+\putimage{images/Diagramma delle Attivita'/Gestione Anomalia.png}{Gestione Anomalia}{png:act:gestione-anomalia}{1}
+\putimage{images/Diagramma delle Attivita'/Controllo Aderenza Piano Terapeutico.png}{Controllo Aderenza Piano Terapeutico}{png:act:controllo-aderenza-piano-terapeutico}{1}
+\putimage{images/Diagramma delle Attivita'/Definizione Piano Terapeutico.png}{Definizione Piano Terapeutico}{png:act:definizione-piano-terapeutico}{1}
+\putimage{images/Diagramma delle Attivita'/Termina Gestione Anomalia.png}{Termina Gestione Anomalia}{png:act:termina-gestione-anomalia}{1}
+
+\end{document}
