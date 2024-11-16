@@ -154,19 +154,29 @@ Si deve progettare un sistema di telemonitoraggio che:
 
 \subsection{Assunzioni}
 
-\paragraph{Vocabolario}
+\paragraph{I medici}
 \begin{itemize}
   \item La nomenclatura dei medici \`e la seguente: il medico curante \`e definito \textbf{Medico di Base} (o MB), quello di turno \`e il \textbf{Medico di Turno} (o MT).
-\end{itemize}
-
-\paragraph{Altro}
-\begin{itemize}
+  \item Il Medico di Turno \`e inteso come personale della Guardia Medica o dell'Ospedale in mobilit\`a che pu\`o gestire le anomalie.
   \item Il Medico di Turno, l'Ambulanza e l'Ospedale possono trovarsi al momento della chiamata in localit\`a diverse.
   \item Il Medico di Turno ha un elenco di destinatari a cui inviare i dati (specialisti, centralina AUSL) che non comprende il Medico di Base in quanto si assume che egli abbia accesso alle informazioni del suo paziente (aggiornate dal sistema).
-  \item Il Piano Terapeutico definisce il monitoraggio di un parametro assieme alle sue soglie (min, max) di normalit\`a e al codice anomalia da assegnare in caso di superamento delle soglie.
-  \item In caso di pi\`u soglie superate, il codice assegnato all'anomalia \`e quello pi\`u grave tra le violazioni.
   \item Il Medico di Turno termina la gestione dell'anomalia manualmente e pu\`o aggiungere una diagnosi alla cartella clinica del paziente.
+\end{itemize}
+
+\paragraph{Il monitoraggio}
+\begin{itemize}
+  \item Il Piano Terapeutico definisce il monitoraggio di un parametro assieme alle sue soglie (min, max) di normalit\`a e al codice anomalia da assegnare in caso di superamento delle soglie.
+  \item Con "superamento della soglia" si intende un valore vuori dal range (min, max).
+  \item In caso di pi\`u soglie superate, il codice assegnato all'anomalia \`e quello pi\`u grave tra le violazioni.
+  \item Un valore fuori soglia fa scattare l'anomalia se e solo se nel controllo precedente non era gi\`a stata superata.
   \item I dati rilevati dai sensori dei parametri sanitari sono salvati (cifrati) nel sistema per permettere al Medico di Turno e al Medico di Base di accedere allo storico recente (< 1 Mese) del paziente.
+  \item Il sistema effettua i controlli solo quando i valori attualizzati si rendono disponibili (la frequenza di rilevazione di ciascuno \`e definita nel Piano Terapeutico).
+\end{itemize}
+
+\paragraph{Le anomalie}
+\begin{itemize}
+  \item Se una nuova violazione delle soglie avviene mentre la gestione di un'anomalia \`e in atto, il codice dell'anomalia \`e aggiornato mantenendo il codice pi\`u grave.
+  \item Se il codice dell'anomalia \`e promosso da \textbf{non-grave} a \textbf{grave} (locuzione "Anomalia aggravata") allora viene attivata la sotto-procedura di gestione delle emergenze prevista (allerta di Ospedale e Ambulanza).
   \item L'anomalia gestita \`e salvata nello storico delle anomalia a supporto del Medico di Base (e del Medico di Turno nelle future anomalie).
 \end{itemize}
 
