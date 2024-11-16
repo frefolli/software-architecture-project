@@ -46,6 +46,14 @@
 	\end{figure}
 }
 
+\newcommand{\bigimage}[4] {
+	\begin{figure}[H]
+	    \centering
+	    \includegraphics[height={#4}\textheight]{#1}
+	    \caption{#2}\label{#3}
+	\end{figure}
+}
+
 \newcommand{\putsubimage}[5] {
   \begin{minipage}{{#4}\linewidth}
 	    \centering
@@ -199,5 +207,17 @@ Si deve progettare un sistema di telemonitoraggio che:
 \putimage{images/Diagramma delle Attivita'/Controllo Aderenza Piano Terapeutico.png}{Controllo Aderenza Piano Terapeutico}{png:act:controllo-aderenza-piano-terapeutico}{1}
 \putimage{images/Diagramma delle Attivita'/Definizione Piano Terapeutico.png}{Definizione Piano Terapeutico}{png:act:definizione-piano-terapeutico}{1}
 \putimage{images/Diagramma delle Attivita'/Termina Gestione Anomalia.png}{Termina Gestione Anomalia}{png:act:termina-gestione-anomalia}{1}
+
+\section{Architettura Logica}
+
+L'architettura del sistema \`e divisa in 4 componenti:
+\begin{itemize}
+  \item \textbf{C1}: Rilevazione di dati in tempo reale.
+  \item \textbf{C2}: Rilevazione e gestione delle anomalie (dall'inizio alla fine).
+  \item \textbf{C3}: Gestione e controllo aderenza ai piani terapeutici.
+  \item \textbf{C4}: L'interfaccia "medicale" che permette ai medici di visualizzare e inviare dati.
+\end{itemize}
+
+\bigimage{images/Diagramma delle Attivita'/Partizione Logica.png}{Partizione Logica}{png:act:partizione-logica}{1}
 
 \end{document}
