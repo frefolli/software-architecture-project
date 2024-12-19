@@ -158,6 +158,13 @@ Si deve progettare un sistema di telemonitoraggio che:
   \item \colorbox{red}{dati}
 \end{itemize}
 
+\subsection{Todo}
+
+\begin{itemize}
+  \item Finire l'architettura logica
+  \item Inserire le note su frequenze, tempo di completamento, locazione e complessit\`a nelle attivit\`a.
+\end{itemize}
+
 \section{Architettura del Problema}
 
 \subsection{Assunzioni}
@@ -190,6 +197,19 @@ Si deve progettare un sistema di telemonitoraggio che:
 
 \subsection{Casi d'Uso}
 
+Sono stati identificati i seguenti casi d'uso:
+\begin{itemize}
+  \item \textbf{U1}: Acquisizione Parametro Sanitario
+  \item \textbf{U2}: Acquisizione ADL
+  \item \textbf{U3}: Acquisizione Attivita' Motoria
+  \item \textbf{U4}: Invia Dati Paziente
+  \item \textbf{U5}: Monitoraggio Anomalie Sanitarie
+  \item \textbf{U6}: Gestione Anomalia
+  \item \textbf{U7}: Controllo Aderenza Piano Terapeutico
+  \item \textbf{U8}: Definizione Piano Terapeutico
+  \item \textbf{U9}: Termina Gestione Anomalia
+\end{itemize}
+
 \putimage{images/Diagramma dei Casi d'Uso.png}{Diagramma dei Casi d'Uso}{png:diagramma-dei-casi-duso}{1}
 
 \subsection{Dati del Problema}
@@ -198,19 +218,82 @@ Si deve progettare un sistema di telemonitoraggio che:
 
 \subsection{Attivita' dei Casi d'Uso}
 
+I casi d'uso a sua volta sono stati divisi nelle seguenti attivit\`a.
+
+\subsubsection{Acquisizione Parametro Sanitario}
+
 \putimage{images/Diagramma delle Attivita'/Acquisizione Parametro Sanitario.png}{Acquisizione Parametro Sanitario}{png:act:acquisizione-parametro-sanitario}{1}
+
+\subsubsection{Acquisizione ADL}
+
 \putimage{images/Diagramma delle Attivita'/Acquisizione ADL.png}{Acquisizione ADL}{png:act:acquisizione-adl}{1}
+
+\subsubsection{Acquisizione Attivita' Motoria}
+
 \putimage{images/Diagramma delle Attivita'/Acquisizione Attivita' Motoria.png}{Acquisizione Attivit\`a Motoria}{png:act:acquisizione-attivita-motoria}{1}
+
+\subsubsection{Invia Dati Paziente}
+
 \putimage{images/Diagramma delle Attivita'/Invia Dati Paziente.png}{Invia Dati Paziente}{png:act:invia-dati-paziente}{1}
+
+\subsubsection{Monitoraggio Anomalie Sanitarie}
+
 \putimage{images/Diagramma delle Attivita'/Monitoraggio Anomalie Sanitarie.png}{Monitoraggio Anomalie Sanitarie}{png:act:monitoraggio-anomalie-sanitarie}{1}
+
+\subsubsection{Gestione Anomalia}
+
 \putimage{images/Diagramma delle Attivita'/Gestione Anomalia.png}{Gestione Anomalia}{png:act:gestione-anomalia}{1}
+
+\subsubsection{Controllo Aderenza Piano Terapeutico}
+
 \putimage{images/Diagramma delle Attivita'/Controllo Aderenza Piano Terapeutico.png}{Controllo Aderenza Piano Terapeutico}{png:act:controllo-aderenza-piano-terapeutico}{1}
+
+\subsubsection{Definizione Piano Terapeutico}
+
 \putimage{images/Diagramma delle Attivita'/Definizione Piano Terapeutico.png}{Definizione Piano Terapeutico}{png:act:definizione-piano-terapeutico}{1}
+
+\subsubsection{Termina Gestione Anomalia}
+
 \putimage{images/Diagramma delle Attivita'/Termina Gestione Anomalia.png}{Termina Gestione Anomalia}{png:act:termina-gestione-anomalia}{1}
 
 \section{Architettura Logica}
 
-L'architettura del sistema \`e divisa in 4 componenti:
+Per l'architettura logica sono state realizzate due opzioni di partizionamento, quindi valutate in termini di metriche AL ai fini di scegliere la pi\`u vantaggiosa.
+
+\subsection{Partizionamento per livello di astrazione}
+
+Il sistema \`e diviso in 4 componenti:
+\begin{itemize}
+  \item \textbf{C4}: Interazione Guidata Umana.
+  \item \textbf{C3}: Gestione Emergenze.
+  \item \textbf{C2}: Elaborazione Dati.
+  \item \textbf{C1}: Acquisizione Dati.
+\end{itemize}
+
+\bigimage{images/Diagramma delle Attivita'/Partizione Logica Livellata.png}{Partizione Logica Livellata}{png:act:partizione-logica-livellata}{1}
+
+Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al tipo di attivit\`a che sono eseguite e dal grado di intervento umano. Quindi abbiamo una segregazione di tutte le funzioni che richiedono di elaborare dati in un apposito componente, ivi quelle che acquisiscono dati, ivi la gestione delle emergenze e cos\`i via.
+
+\begin{center}
+  \begin{tabular}{|l | r | c|}
+    \hline
+    Dimensione & Valore & Motivazione \\
+    \hline
+    Complexity & & \\
+    Frequency & & \\
+    Delay & & \\
+    Location & & \\
+    Extra flows & & \\
+    Intra flows & & \\
+    Sharing & & \\
+    Control flows & & \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Partizionamento settorialite}
+
+Il sistema \`e diviso in 4 componenti:
 \begin{itemize}
   \item \textbf{C1}: Rilevazione di dati in tempo reale.
   \item \textbf{C2}: Rilevazione e gestione delle anomalie (dall'inizio alla fine).
@@ -218,6 +301,27 @@ L'architettura del sistema \`e divisa in 4 componenti:
   \item \textbf{C4}: L'interfaccia "medicale" che permette ai medici di visualizzare e inviare dati.
 \end{itemize}
 
-\bigimage{images/Diagramma delle Attivita'/Partizione Logica.png}{Partizione Logica}{png:act:partizione-logica}{1}
+\bigimage{images/Diagramma delle Attivita'/Partizione Logica Settoriale.png}{Partizione Logica Settoriale}{png:act:partizione-logica-settoriale}{1}
 
+Il partizionamento del sistema \`e legato alla frequenza delle attivit\`a (C1) e al tipo di dato che viene processato (C3, C4) e alla comunicazione interna-esterna nella coordinazione del sistema per raggiungere un obiettivo complesso (C2, la gestione di una anomalia dall'inizio alla fine dell'emergenza).
+Di seguito una valutazione della partizione nelle 9 dimensioni definite:
+
+\begin{center}
+  \begin{tabular}{|l | r | c|}
+    \hline
+    Dimensione & Valore & Motivazione \\
+    \hline
+    Complexity & & \\
+    Frequency & & \\
+    Delay & & \\
+    Location & & \\
+    Extra flows & & \\
+    Intra flows & & \\
+    Sharing & & \\
+    Control flows & & \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\subsection{Confronto e partizionamento scelto}
 \end{document}
