@@ -218,41 +218,68 @@ Sono stati identificati i seguenti casi d'uso:
 
 \subsection{Attivita' dei Casi d'Uso}
 
-I casi d'uso a sua volta sono stati divisi nelle seguenti attivit\`a.
+I casi d'uso a sua volta sono stati divisi nelle seguenti attivit\`a. I diagrammi contengono alcune note:
+
+\begin{itemize}
+  \item In Arancio sono indicate delle informazioni di tipo funzionale.
+  \item In Lilla sono indicate delle informazioni sui delay tra le attivit\`a.
+  \item In Blu Scuro sono indicate delle informazioni sulla complessit\`a delle attivit\`a (salvo esplicit\`a indicazione, le attivit\`a del sistema hanno bassa complessit\`a).
+  \item In Verde sono indicate delle informazioni circa le frequenze massime previste per i flussi e le attivit\`a.
+\end{itemize}
 
 \subsubsection{Acquisizione Parametro Sanitario}
+
+Le frequenze sono alte per via del fatto che solitamente si tratteranno di parametri vitali e quindi \`e importante che il sistema possa ricevere molti dati in tempo reale e possa immagazzinarli per future elaborazioni.
 
 \putimage{images/Diagramma delle Attivita'/Acquisizione Parametro Sanitario.png}{Acquisizione Parametro Sanitario}{png:act:acquisizione-parametro-sanitario}{1}
 
 \subsubsection{Acquisizione ADL}
 
+Le frequenze sono pi\`u basse rispetto alla rilevazione di parametri sanitari perch\`e non rappresentano un pericolo immediato per il paziente ma solo una violazione del suo piano terapeutico.
+
 \putimage{images/Diagramma delle Attivita'/Acquisizione ADL.png}{Acquisizione ADL}{png:act:acquisizione-adl}{1}
 
 \subsubsection{Acquisizione Attivita' Motoria}
+
+Le frequenze sono pi\`u basse rispetto alla rilevazione di parametri sanitari perch\`e non rappresentano un pericolo immediato per il paziente ma solo una violazione del suo piano terapeutico.
 
 \putimage{images/Diagramma delle Attivita'/Acquisizione Attivita' Motoria.png}{Acquisizione Attivit\`a Motoria}{png:act:acquisizione-attivita-motoria}{1}
 
 \subsubsection{Invia Dati Paziente}
 
+Si suppone che sia necessario inviare i dati di un paziente circa al massimo una volta al giorno.
+
 \putimage{images/Diagramma delle Attivita'/Invia Dati Paziente.png}{Invia Dati Paziente}{png:act:invia-dati-paziente}{1}
 
 \subsubsection{Monitoraggio Anomalie Sanitarie}
+
+Se le rilevazioni di parametri sono molto frequenti allora anche la loro verifica deve essere altrettanto frequente.
+Si stima che un paziente particolarmente problematico possa avere al massimo 10 crisi l'ora (da l\`i le frequenze di classificazione).
+Una volta rilevata un'anomalia, la sua classificazione deve essere molto rapida perch\`e alcune patologie sono tempo dipendenti.
 
 \putimage{images/Diagramma delle Attivita'/Monitoraggio Anomalie Sanitarie.png}{Monitoraggio Anomalie Sanitarie}{png:act:monitoraggio-anomalie-sanitarie}{1}
 
 \subsubsection{Gestione Anomalia}
 
+Vale il discorso di prima sulla stima del numero massimo di anomalie per un paziente. Inoltre l'identificazione delle risorse per gestirla (medico di turno, ambulanza e ospedale) deve essere relativamente rapida per la possibile presenza di patologie tempodipendenti. Siccome l'identificazione pu\`o concernere l'accesso di dati in tempo reale per l'allocazione delle risorse e una comunicazione con la centrale operativa, il delay \`e pi\`u rilassato \footnote{\`E un sistema distribuito, dopotutto} e la sua complessit\`a \`e un filo pi\`u complessa rispetto alle altre.
+
 \putimage{images/Diagramma delle Attivita'/Gestione Anomalia.png}{Gestione Anomalia}{png:act:gestione-anomalia}{1}
 
 \subsubsection{Controllo Aderenza Piano Terapeutico}
+
+L'aderenza al piano viene controllata una volta al giorno a mezzanotte \textit{Ovvero allo scadere del giorno} e non essendo un'operazione complessa, ma nemmeno eccessivamente prioritaria, pu\`o essere completata in una decina di min.
 
 \putimage{images/Diagramma delle Attivita'/Controllo Aderenza Piano Terapeutico.png}{Controllo Aderenza Piano Terapeutico}{png:act:controllo-aderenza-piano-terapeutico}{1}
 
 \subsubsection{Definizione Piano Terapeutico}
 
+La ridefinizione del piano terapeutico si stima che possa avvenire al massimo una volta al giorno e deve essere completata entro il tempo di una normale sessione interattiva.
+
 \putimage{images/Diagramma delle Attivita'/Definizione Piano Terapeutico.png}{Definizione Piano Terapeutico}{png:act:definizione-piano-terapeutico}{1}
 
 \subsubsection{Termina Gestione Anomalia}
+
+La terminazione dell'anomalia gestita si stima che possa avvenire massimo un paio di volte al giorno e, prevedendo un'opzionale dichiarazione di diagnosi, deve essere completata entro il tempo di una normale sessione interattiva.
 
 \putimage{images/Diagramma delle Attivita'/Termina Gestione Anomalia.png}{Termina Gestione Anomalia}{png:act:termina-gestione-anomalia}{1}
 
@@ -260,7 +287,7 @@ I casi d'uso a sua volta sono stati divisi nelle seguenti attivit\`a.
 
 Per l'architettura logica sono state realizzate due opzioni di partizionamento, quindi valutate in termini di metriche AL ai fini di scegliere la pi\`u vantaggiosa.
 
-\subsection{Partizionamento per livello di astrazione}
+\subsection{Partizionamento livellato}
 
 Il sistema \`e diviso in 4 componenti:
 \begin{itemize}
@@ -275,23 +302,25 @@ Il sistema \`e diviso in 4 componenti:
 Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al tipo di attivit\`a che sono eseguite e dal grado di intervento umano. Quindi abbiamo una segregazione di tutte le funzioni che richiedono di elaborare dati in un apposito componente, ivi quelle che acquisiscono dati, ivi la gestione delle emergenze e cos\`i via.
 
 \begin{center}
-  \begin{tabular}{|l | r | c|}
-    \hline
-    Dimensione & Valore & Motivazione \\
-    \hline
-    Complexity & & \\
-    Frequency & & \\
-    Delay & & \\
-    Location & & \\
-    Extra flows & & \\
-    Intra flows & & \\
-    Sharing & & \\
-    Control flows & & \\
-    \hline
-  \end{tabular}
+  \resizebox{\linewidth}{!}{
+    \begin{tabular}{|l | r | c|}
+      \hline
+      Dimensione & Valore & Motivazione \\
+      \hline
+      Complexity & 30 & La maggior parte di componenti incorpora attivit\`a con livello omogeneo di complessit\`a \\
+      Frequency & 60 & Alcuni componenti hanno attivit\`a con frequenze molto diverse, ma alcuni sono omogenei \\
+      Delay & 70 & Alcuni componenti hanno attivit\`a con delay molto diversi tra loro \\
+      Location & 0 & Le attivit\`a nei componenti eseguono potenzialmente sugli stessi nodi \\
+      Extra flows & 40 & Quasi tutti i componenti scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
+      Intra flows & 40 & Generalmente i moduli si scambiano pochi dati, ma i componenti \textit{Acquisizione Dati} e \textit{Elaborazione Dati} sono molto accoppiati \\
+      Sharing & 0 & I moduli non condividono dati non in streaming \\
+      Control flows & 10 & L'unica interazione rilevante \`e il trigger delle anomalie in \textit{Elaborazione Dati} verso la \textit{Gestione Emergenze} \\
+      \hline
+    \end{tabular}
+  }
 \end{center}
 
-\subsection{Partizionamento settorialite}
+\subsection{Partizionamento settoriale}
 
 Il sistema \`e diviso in 4 componenti:
 \begin{itemize}
@@ -307,21 +336,30 @@ Il partizionamento del sistema \`e legato alla frequenza delle attivit\`a (C1) e
 Di seguito una valutazione della partizione nelle 9 dimensioni definite:
 
 \begin{center}
-  \begin{tabular}{|l | r | c|}
-    \hline
-    Dimensione & Valore & Motivazione \\
-    \hline
-    Complexity & & \\
-    Frequency & & \\
-    Delay & & \\
-    Location & & \\
-    Extra flows & & \\
-    Intra flows & & \\
-    Sharing & & \\
-    Control flows & & \\
-    \hline
-  \end{tabular}
+  \resizebox{\linewidth}{!}{
+    \begin{tabular}{|l | r | c|}
+      \hline
+      Dimensione & Valore & Motivazione \\
+      \hline
+      Complexity & 30 & La maggior parte di componenti incorpora attivit\`a con livello omogeneo di complessit\`a \\
+      Frequency & 60 & Alcuni componenti hanno attivit\`a con frequenze molto diverse, ma alcuni sono omogenei \\
+      Delay & 60 & Alcuni componenti hanno attivit\`a con delay molto diversi tra loro, ma alcuni sono abbastanza omogenei come ordine di grandezza \\
+      Location & 0 & Le attivit\`a nei componenti eseguono potenzialmente sugli stessi nodi \\
+      Extra flows & 40 & Quasi tutti i componenti scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
+      Intra flows & 30 & I moduli si scambiano pochi dati, e sempre al massimo con un solo modulo \\
+      Sharing & 0 & I moduli non condividono dati non in streaming \\
+      Control flows & 0 & I componenti tra loro non interagiscono \\
+      \hline
+    \end{tabular}
+  }
 \end{center}
 
 \subsection{Confronto e partizionamento scelto}
+
+Dalle metriche (riportate nelle Figure \ref{png:metriche-livellata} e \ref{png:metriche-settoriale}) risulta che il partizionamento migliore sia quello settoriale.
+
+\putimagecouple
+{\putsubimage{images/metriche-livellata.png}{Partizione per Livelli}{png:metriche-livellata}{0.45}{1}}
+{\putsubimage{images/metriche-settoriale.png}{Partizione Settoriale}{png:metriche-settoriale}{0.45}{1}}
+
 \end{document}
