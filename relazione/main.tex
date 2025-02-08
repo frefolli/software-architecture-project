@@ -289,7 +289,7 @@ Per l'architettura logica sono state realizzate due opzioni di partizionamento, 
 
 \subsection{Partizionamento livellato}
 
-Il sistema \`e diviso in 4 componenti:
+Il sistema \`e diviso in 4 moduli \footnote{Il \textit{modulo} \`e il componente logico, ho separato la terminologia per favorire la comprensione}:
 \begin{itemize}
   \item \textbf{C4}: Interazione Guidata Umana.
   \item \textbf{C3}: Gestione Emergenze.
@@ -299,7 +299,7 @@ Il sistema \`e diviso in 4 componenti:
 
 \bigimage{images/Diagramma delle Attivita'/Partizione Logica Livellata.png}{Partizione Logica Livellata}{png:act:partizione-logica-livellata}{1}
 
-Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al tipo di attivit\`a che sono eseguite e dal grado di intervento umano. Quindi abbiamo una segregazione di tutte le funzioni che richiedono di elaborare dati in un apposito componente, ivi quelle che acquisiscono dati, ivi la gestione delle emergenze e cos\`i via.
+Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al tipo di attivit\`a che sono eseguite e dal grado di intervento umano. Quindi abbiamo una segregazione di tutte le funzioni che richiedono di elaborare dati in un apposito modulo, ivi quelle che acquisiscono dati, ivi la gestione delle emergenze e cos\`i via.
 
 \begin{center}
   \resizebox{\linewidth}{!}{
@@ -307,12 +307,12 @@ Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al 
       \hline
       Dimensione & Valore & Motivazione \\
       \hline
-      Complexity & 30 & La maggior parte di componenti incorpora attivit\`a con livello omogeneo di complessit\`a \\
-      Frequency & 60 & Alcuni componenti hanno attivit\`a con frequenze molto diverse, ma alcuni sono omogenei \\
-      Delay & 70 & Alcuni componenti hanno attivit\`a con delay molto diversi tra loro \\
-      Location & 0 & Le attivit\`a nei componenti eseguono potenzialmente sugli stessi nodi \\
-      Extra flows & 40 & Quasi tutti i componenti scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
-      Intra flows & 40 & Generalmente i moduli si scambiano pochi dati, ma i componenti \textit{Acquisizione Dati} e \textit{Elaborazione Dati} sono molto accoppiati \\
+      Complexity & 30 & La maggior parte di moduli incorpora attivit\`a con livello omogeneo di complessit\`a \\
+      Frequency & 60 & Alcuni moduli hanno attivit\`a con frequenze molto diverse, ma alcuni sono omogenei \\
+      Delay & 70 & Alcuni moduli hanno attivit\`a con delay molto diversi tra loro \\
+      Location & 0 & Le attivit\`a nei moduli eseguono potenzialmente sugli stessi nodi \\
+      Extra flows & 40 & Quasi tutti i moduli scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
+      Intra flows & 40 & Generalmente i moduli si scambiano pochi dati, ma i moduli \textit{Acquisizione Dati} e \textit{Elaborazione Dati} sono molto accoppiati \\
       Sharing & 0 & I moduli non condividono dati non in streaming \\
       Control flows & 10 & L'unica interazione rilevante \`e il trigger delle anomalie in \textit{Elaborazione Dati} verso la \textit{Gestione Emergenze} \\
       \hline
@@ -322,7 +322,7 @@ Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al 
 
 \subsection{Partizionamento settoriale}
 
-Il sistema \`e diviso in 4 componenti:
+Il sistema \`e diviso in 4 moduli:
 \begin{itemize}
   \item \textbf{C1}: Rilevazione di dati in tempo reale.
   \item \textbf{C2}: Rilevazione e gestione delle anomalie (dall'inizio alla fine).
@@ -341,14 +341,14 @@ Di seguito una valutazione della partizione nelle 9 dimensioni definite:
       \hline
       Dimensione & Valore & Motivazione \\
       \hline
-      Complexity & 30 & La maggior parte di componenti incorpora attivit\`a con livello omogeneo di complessit\`a \\
-      Frequency & 60 & Alcuni componenti hanno attivit\`a con frequenze molto diverse, ma alcuni sono omogenei \\
-      Delay & 60 & Alcuni componenti hanno attivit\`a con delay molto diversi tra loro, ma alcuni sono abbastanza omogenei come ordine di grandezza \\
-      Location & 0 & Le attivit\`a nei componenti eseguono potenzialmente sugli stessi nodi \\
-      Extra flows & 40 & Quasi tutti i componenti scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
+      Complexity & 30 & La maggior parte di moduli incorpora attivit\`a con livello omogeneo di complessit\`a \\
+      Frequency & 60 & Alcuni moduli hanno attivit\`a con frequenze molto diverse, ma alcuni sono omogenei \\
+      Delay & 60 & Alcuni moduli hanno attivit\`a con delay molto diversi tra loro, ma alcuni sono abbastanza omogenei come ordine di grandezza \\
+      Location & 0 & Le attivit\`a nei moduli eseguono potenzialmente sugli stessi nodi \\
+      Extra flows & 40 & Quasi tutti i moduli scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
       Intra flows & 30 & I moduli si scambiano pochi dati, e sempre al massimo con un solo modulo \\
       Sharing & 0 & I moduli non condividono dati non in streaming \\
-      Control flows & 0 & I componenti tra loro non interagiscono \\
+      Control flows & 0 & I moduli tra loro non interagiscono \\
       \hline
     \end{tabular}
   }
@@ -361,5 +361,7 @@ Dalle metriche (riportate nelle Figure \ref{png:metriche-livellata} e \ref{png:m
 \putimagecouple
 {\putsubimage{images/metriche-livellata.png}{Partizione per Livelli}{png:metriche-livellata}{0.45}{1}}
 {\putsubimage{images/metriche-settoriale.png}{Partizione Settoriale}{png:metriche-settoriale}{0.45}{1}}
+
+\section{Architettura Concreta}
 
 \end{document}

@@ -1,0 +1,51 @@
+Component: {shape: class}
+Active: {shape: class}
+Passive: {shape: class}
+Stateless: {shape: class}
+Stateful: {shape: class}
+Active -> Component
+Passive -> Component
+Stateless -> Component
+Stateful -> Component
+
+ActiveStateless: {shape: class}
+PassiveStateless: {shape: class}
+ActiveStateful: {shape: class}
+PassiveStateful: {shape: class}
+
+ActiveStateless -> Active
+ActiveStateless -> Stateless
+PassiveStateless -> Passive
+PassiveStateless -> Stateless
+ActiveStateful -> Active
+ActiveStateful -> Stateful
+PassiveStateful -> Passive
+PassiveStateful -> Stateful
+
+InterfacciaMedicale: "C4: Interfaccia Medicale" {
+  InterfacciaMedicale: {shape: class}
+}
+InterfacciaMedicale.InterfacciaMedicale -> PassiveStateless
+
+GestioneEControlloPianiTerapeutici: "C3: Gestione e controllo piani terapeutici" {
+  GestionePianiTerapeutici: {shape: class}
+  ControlloPianiTerapeutici: {shape: class}
+}
+GestioneEControlloPianiTerapeutici.GestionePianiTerapeutici -> PassiveStateless
+GestioneEControlloPianiTerapeutici.ControlloPianiTerapeutici -> ActiveStateless
+
+RilevazioneEGestioneAnomalie: "C2: Rilevazione e gestione anomalie" {
+  RilevazioneAnomalie: {shape: class}
+  GestioneAnomalie: {shape: class}
+}
+RilevazioneEGestioneAnomalie.RilevazioneAnomalie -> ActiveStateless
+RilevazioneEGestioneAnomalie.GestioneAnomalie -> ActiveStateful
+
+RilevazioneDatiInTempoReale: "C1: Rilevazione dati in tempo reale" {
+  AcquisizioneMovimento: {shape: class}
+  AcquisizioneParametriSanitari: {shape: class}
+}
+
+RilevazioneDatiInTempoReale.AcquisizioneMovimento -> ActiveStateless
+RilevazioneDatiInTempoReale.AcquisizioneParametriSanitari -> ActiveStateful
+
