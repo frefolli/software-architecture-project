@@ -313,7 +313,7 @@ Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al 
       Location & 0 & Le attivit\`a nei moduli eseguono potenzialmente sugli stessi nodi \\
       Extra flows & 40 & Quasi tutti i moduli scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
       Intra flows & 40 & Generalmente i moduli si scambiano pochi dati, ma i moduli \textit{Acquisizione Dati} e \textit{Elaborazione Dati} sono molto accoppiati \\
-      Sharing & 0 & I moduli non condividono dati non in streaming \\
+      Sharing & 10 & I moduli non condividono dati se non in streaming (\textit{Buffers}) \\
       Control flows & 10 & L'unica interazione rilevante \`e il trigger delle anomalie in \textit{Elaborazione Dati} verso la \textit{Gestione Emergenze} \\
       \hline
     \end{tabular}
@@ -347,7 +347,7 @@ Di seguito una valutazione della partizione nelle 9 dimensioni definite:
       Location & 0 & Le attivit\`a nei moduli eseguono potenzialmente sugli stessi nodi \\
       Extra flows & 40 & Quasi tutti i moduli scambiano informazioni con sistemi esterni (la Centrale, i rilevatori IoT, ... etc) \\
       Intra flows & 30 & I moduli si scambiano pochi dati, e sempre al massimo con un solo modulo \\
-      Sharing & 0 & I moduli non condividono dati non in streaming \\
+      Sharing & 10 & I moduli non condividono dati se non in streaming (\textit{Buffers})\\
       Control flows & 0 & I moduli tra loro non interagiscono \\
       \hline
     \end{tabular}
@@ -363,5 +363,58 @@ Dalle metriche (riportate nelle Figure \ref{png:metriche-livellata} e \ref{png:m
 {\putsubimage{images/metriche-settoriale.png}{Partizione Settoriale}{png:metriche-settoriale}{0.45}{1}}
 
 \section{Architettura Concreta}
+
+\subsection{Diagramma dei Componenti}
+
+
+
+\putimage{images/Diagramma dei Componenti.png}{Diagramma dei Componenti}{png:diagramma-dei-componenti}{1}
+
+\subsection{Diagrammi di Sequenza}
+
+\subsubsection{Acquisizione ADL}
+
+\putimage{images/Diagramma di Sequenza/Acquisizione ADL.png}{Acquisizione ADL}{png:acquisizione-adl}{1}
+
+
+\subsubsection{Acquisizione Parametro Sanitario}
+
+\putimage{images/Diagramma di Sequenza/Acquisizione Parametro Sanitario.png}{Acquisizione Parametro Sanitario}{png:acquisizione-parametro-sanitario}{1}
+
+
+\subsubsection{Definizione Piano Terapeutico}
+
+\putimage{images/Diagramma di Sequenza/Definizione Piano Terapeutico.png}{Definizione Piano Terapeutico}{png:definizione-piano-terapeutico}{1}
+
+
+\subsubsection{Invia Dati Paziente}
+
+\putimage{images/Diagramma di Sequenza/Invia Dati Paziente.png}{Invia Dati Paziente}{png:invia-dati-paziente}{1}
+
+
+\subsubsection{Termina Gestione Anomalia}
+
+\putimage{images/Diagramma di Sequenza/Termina Gestione Anomalia.png}{Termina Gestione Anomalia}{png:termina-gestione-anomalia}{1}
+
+
+\subsubsection{Acquisizione Attivita' Motoria}
+
+\putimage{images/Diagramma di Sequenza/Acquisizione Attivita' Motoria.png}{Acquisizione Attivita' Motoria}{png:acquisizione-attivita-motoria}{1}
+
+
+\subsubsection{Controllo Aderenza Piano Terapeutico}
+
+\putimage{images/Diagramma di Sequenza/Controllo Aderenza Piano Terapeutico.png}{Controllo Aderenza Piano Terapeutico}{png:controllo-aderenza-piano-terapeutico}{1}
+
+
+\subsubsection{Gestione Anomalia}
+
+\putimage{images/Diagramma di Sequenza/Gestione Anomalia.png}{Gestione Anomalia}{png:gestione-anomalia}{1}
+
+
+\subsubsection{Monitoraggio Anomalie Sanitarie}
+
+\putimage{images/Diagramma di Sequenza/Monitoraggio Anomalie Sanitarie.png}{Monitoraggio Anomalie Sanitarie}{png:monitoraggio-anomalie-sanitarie}{1}
+
 
 \end{document}
