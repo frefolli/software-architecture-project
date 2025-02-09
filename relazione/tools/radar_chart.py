@@ -26,8 +26,8 @@ def main():
                         "Extra flows", "Intra flows",
                         "Sharing", "Control flows"])
   files = ['metriche-livellata.png', 'metriche-settoriale.png']
-  data = [numpy.array([30,60,70,0,40,40,0,10]),
-          numpy.array([30,60,60,0,40,30,0,0])]
+  data = [numpy.array([30,60,70,0,40,40,10,10]),
+          numpy.array([30,60,60,0,40,30,10,0])]
   for file, data_ in zip(files, data):
     plot_radar(file, labels, data_)
 
