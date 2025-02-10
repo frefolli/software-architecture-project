@@ -88,7 +88,7 @@
     \begin{titlepage}
         \noindent
         \begin{minipage}[t]{0.19\textwidth}
-            \vspace{-4mm}{\includegraphics[scale=1.15]{logo_unimib.pdf}}
+            \vspace{-4mm}{\includegraphics[scale=0.85]{logo-er-salute.pdf}}
         \end{minipage}
         \begin{minipage}[t]{0.81\textwidth}
         {
@@ -158,13 +158,6 @@ Si deve progettare un sistema di telemonitoraggio che:
   \item \colorbox{red}{dati}
 \end{itemize}
 
-\subsection{Todo}
-
-\begin{itemize}
-  \item Finire l'architettura logica
-  \item Inserire le note su frequenze, tempo di completamento, locazione e complessit\`a nelle attivit\`a.
-\end{itemize}
-
 \section{Architettura del Problema}
 
 \subsection{Assunzioni}
@@ -193,6 +186,18 @@ Si deve progettare un sistema di telemonitoraggio che:
   \item Se una nuova violazione delle soglie avviene mentre la gestione di un'anomalia \`e in atto, il codice dell'anomalia \`e aggiornato mantenendo il codice pi\`u grave.
   \item Se il codice dell'anomalia \`e promosso da \textbf{non-grave} a \textbf{grave} (locuzione "Anomalia aggravata") allora viene attivata la sotto-procedura di gestione delle emergenze prevista (allerta di Ospedale e Ambulanza).
   \item L'anomalia gestita \`e salvata nello storico delle anomalia a supporto del Medico di Base (e del Medico di Turno nelle future anomalie).
+\end{itemize}
+
+\paragraph{Le stime}
+\begin{itemize}
+  \item Si assume che le stime sulle frequenze siano riferite ad un solo paziente perch\`e la maggior parte delle funzioni possono essere svolte localmente ad esso e nel caso di funzioni collettivizzabili verr\`a esplicitamente segnalato.
+  \item Si prende come bacino d'utenza di riferimento l'AUSL di Piacenza.
+  \item L'area ha una popolazione di circa 280K abitanti e di questi il 30 circa percento \`e un assistito fragile (anziani, malati cronici ... etc).
+  \item I medici di base sono circa 170, e ognuno ha circa 1500 assistiti. Di questi, si assume che l'2.5 percento degli assistiti necessiti di cura domiciliare e/o si sottoponga ad un intervento (con piano terapeutico).
+  \item Ovvero, si parla di circa 45 pazienti per medico di base; in totale nel sistema ci possono essere 7.5K assistiti.
+  \item Il numero di emergenze 118 attivate nell'ultimo anno \`e stato 34K; con un p\`o di approssimazione si p\`uo stimare che la probabilit\`a per un cittadino preso a caso di generare un'urgenza \`e del 12 percento.
+  \item Quindi, nel corso dell'anno ci possono essere in media 930 attivazioni (approssimando a 1000 per stimare anche le anomalie non emergenziali), per un totale di 3 anomalie al giorno.
+  \item Siccome il sistema deve essere pronto a intervenire in qualsiasi momento \footnote{L'incolumit\`a del paziente \`e da salvaguardare a tutti i costi}, nei calcoli sulle frequenze si stimer\`a 1 attivazione al giorno come emergenza e 1 all'ora come anomalia.
 \end{itemize}
 
 \subsection{Casi d'Uso}
@@ -417,5 +422,41 @@ Dalle metriche (riportate nelle Figure \ref{png:metriche-livellata} e \ref{png:m
 \section{Architettura di Deployment}
 
 \putimage{images/Diagramma di Deployment.png}{Diagramma di Deployment}{png:diagramma-di-deployment}{1}
+
+\section{Analisi di Qualit\`a}
+
+\paragraph{Performance}
+
+Le operazioni onerose per servire un utente non impattano sulle risorse di un altro utente.
+Il nodo dell'utente deve essere abbastanza potente da poter processare tutti i dati provenienti dai sensori.
+
+\paragraph{Security}
+
+I dati emessi dai sensori possono non essere criptati per velocizzare il trasferimento siccome si trovano in prossimit\`a del nodo utente. Invece le comunicazioni tra la centrale, lo storage e il nodo utente devono essere criptate per garantire il rispetto delle normative vigenti in materia di tutela della privacy. HTTPS di per se garantisce un mascheramento del contenuto del pacchetto, ma in base all'implementazione di TLS pu\`o essere necessario utilizzare anche un tunnel cifrato per mantenere segreta anche l'identit\`a della sorgente dei dati \footnote{Per quanto riguarda le comunicazioni nodo personale - cloud}. I dati negli storage locale e globale dovrebbero inoltre essere cifrati per impedire accesso non autorizzato.
+
+\paragraph{Modifiability}
+
+Il sistema \`e modulare, ma alcuni componenti dipendono dalle interfacce esposte per garantire la comunicazione, quindi eventuali modifiche devono essere concertate. Le tecnologie utilizzate nei nodi diversi possono essere diverse.
+
+\paragraph{Availability}
+
+I nodi della centrale operativa e dello storage centrale devono essere replicati per garantire disponibilit\`a in caso di guasti.
+
+\paragraph{Resilience}
+
+Il punto precedente include anche la replicazione in pi\`u zone di rischio diverse, per evitare che una catastrofe ambientale o un incidente nucleare/industriale metta fuori uso tutte le repliche.
+Inoltre, se un sensore si guasta \`e di fondamentale importanza essere in grado di rilevare immediatamente l'evento per evitare che si verifichino anomalie silenziose.
+
+\paragraph{Recoverability}
+
+Se il nodo personale va in crash, e perde di conseguenza tutti i dati in memoria centrale, grazie al database locale \`e possibile recuperare le informazioni perse per continuare le operazioni. Il componente \textit{RilevaAnomalie} invece pu\`o continuare a operare come prima siccome utilizza solo gli ultimi dati disponibili provenienti dal buffer (o in alternativa utilizzare l'ultimo record nello storage locale se il dato \`e a bassa frequenza di campionamento).
+
+\paragraph{Observability}
+
+I processi nel nodo centrale possono essere facilmente monitorati, ma anche gli eventi significativi nel nodo personale possono essere loggati e inviati alla centrale per verificare l'efficienza del sistema.
+
+\paragraph{Deliverability}
+
+Il nodo personale pu\`o verificare la presenza di aggiornamenti nell'upstream e aggiornare il sistema di conseguenza. \`E preferibile se il nodo personale \`e modulare al punto di poter sostituire intere parti del sistema senza provocare un'interruzione del servizio (\textit{Hot Reloading}).
 
 \end{document}
