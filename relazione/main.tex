@@ -169,6 +169,8 @@ Si deve progettare un sistema di telemonitoraggio che:
   \item Il Medico di Turno, l'Ambulanza e l'Ospedale possono trovarsi al momento della chiamata in localit\`a diverse.
   \item Il Medico di Turno ha un elenco di destinatari a cui inviare i dati (specialisti, centralina AUSL) che non comprende il Medico di Base in quanto si assume che egli abbia accesso alle informazioni del suo paziente (aggiornate dal sistema).
   \item Il Medico di Turno termina la gestione dell'anomalia manualmente e pu\`o aggiungere una diagnosi alla cartella clinica del paziente.
+  \item Si assume che il software con il quale i Medici, l'Ospedale, l'Ambulanza si interfacciano al sistema sia gi\`a esistente e il sistema da sviluppare si debba integrare con essi.
+  \item Si assume che i sensori siano dotati di software proprio con il quale il sistema si deve \textit{"semplicemente"} integrare (caso tipico dei dispositivi IoT/WoT).
 \end{itemize}
 
 \paragraph{Il monitoraggio}
@@ -190,14 +192,14 @@ Si deve progettare un sistema di telemonitoraggio che:
 
 \paragraph{Le stime}
 \begin{itemize}
-  \item Si assume che le stime sulle frequenze siano riferite ad un solo paziente perch\`e la maggior parte delle funzioni possono essere svolte localmente ad esso e nel caso di funzioni collettivizzabili verr\`a esplicitamente segnalato.
   \item Si prende come bacino d'utenza di riferimento l'AUSL di Piacenza.
   \item L'area ha una popolazione di circa 280K abitanti e di questi il 30 circa percento \`e un assistito fragile (anziani, malati cronici ... etc).
   \item I medici di base sono circa 170, e ognuno ha circa 1500 assistiti. Di questi, si assume che l'2.5 percento degli assistiti necessiti di cura domiciliare e/o si sottoponga ad un intervento (con piano terapeutico).
   \item Ovvero, si parla di circa 45 pazienti per medico di base; in totale nel sistema ci possono essere 7.5K assistiti.
   \item Il numero di emergenze 118 attivate nell'ultimo anno \`e stato 34K; con un p\`o di approssimazione si p\`uo stimare che la probabilit\`a per un cittadino preso a caso di generare un'urgenza \`e del 12 percento.
   \item Quindi, nel corso dell'anno ci possono essere in media 930 attivazioni (approssimando a 1000 per stimare anche le anomalie non emergenziali), per un totale di 3 anomalie al giorno.
-  \item Siccome il sistema deve essere pronto a intervenire in qualsiasi momento \footnote{L'incolumit\`a del paziente \`e da salvaguardare a tutti i costi}, nei calcoli sulle frequenze si stimer\`a 1 attivazione al giorno come emergenza e 1 all'ora come anomalia.
+  % \item Siccome il sistema deve essere pronto a intervenire in qualsiasi momento \footnote{L'incolumit\`a del paziente \`e da salvaguardare a tutti i costi}, nei calcoli sulle frequenze si stimer\`a 1 attivazione al giorno come emergenza e 1 all'ora come anomalia.
+  \item Siccome esistono parametri fisiologici che devono essere acquisiti con frequenze alte frequenze, si stima che un sensore possa in media produrre dati con frequenza di 50 Hz (ovvero 50/secondo).
 \end{itemize}
 
 \subsection{Casi d'Uso}
@@ -230,6 +232,7 @@ I casi d'uso a sua volta sono stati divisi nelle seguenti attivit\`a. I diagramm
   \item In Lilla sono indicate delle informazioni sui delay tra le attivit\`a.
   \item In Blu Scuro sono indicate delle informazioni sulla complessit\`a delle attivit\`a (salvo esplicit\`a indicazione, le attivit\`a del sistema hanno bassa complessit\`a).
   \item In Verde sono indicate delle informazioni circa le frequenze massime previste per i flussi e le attivit\`a.
+  \item Le frequenze fanno riferimento alla stima di 7.5K pazienti e alla stima di 3 anomalie giornaliere. In particolare si assume che i piani terapeutici siano stati gi\`a definiti al momento dell'inserimento del paziente e che vengano cambiati con la stessa frequenza con cui si verificano le anomalie per i pazienti.
 \end{itemize}
 
 \subsubsection{Acquisizione Parametro Sanitario}
@@ -337,6 +340,7 @@ Il sistema \`e diviso in 4 moduli:
 
 \bigimage{images/Diagramma delle Attivita'/Partizione Logica Settoriale.png}{Partizione Logica Settoriale}{png:act:partizione-logica-settoriale}{1}
 
+Nel diagramma sono presenti dei riquadri color rosa che abbozzano la divisione in componenti concreti della fase successiva.
 Il partizionamento del sistema \`e legato alla frequenza delle attivit\`a (C1) e al tipo di dato che viene processato (C3, C4) e alla comunicazione interna-esterna nella coordinazione del sistema per raggiungere un obiettivo complesso (C2, la gestione di una anomalia dall'inizio alla fine dell'emergenza).
 Di seguito una valutazione della partizione nelle 9 dimensioni definite:
 
