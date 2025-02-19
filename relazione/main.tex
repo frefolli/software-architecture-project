@@ -147,7 +147,7 @@ Si deve progettare un sistema di telemonitoraggio che:
   \item notifica il medico di turno identificato inviandogli la cartella sanitaria.
   \item consente al medico di turno di inviare i parametri rilevati, la diagnosi ed altre informazioni relative allo stato di salute del paziente.
   \item acquisisce dalla piattaforma di tracciamento le informazioni delle attività della vita quotidiana svolte.
-  \item verifica a fine giornata se nei momenti in cui doveva svolgere degli esercizi di riabilitazione, il paziente li ha svolto realmente.
+  \item verifica a fine giornata se nei momenti in cui doveva svolgere degli esercizi di riabilitazione, il paziente li ha svolti realmente.
 \end{enumerate}
 
 \subsection{Legenda}
@@ -179,7 +179,7 @@ Si deve progettare un sistema di telemonitoraggio che:
   \item Con "superamento della soglia" si intende un valore vuori dal range (min, max).
   \item In caso di pi\`u soglie superate, il codice assegnato all'anomalia \`e quello pi\`u grave tra le violazioni.
   \item Un valore fuori soglia fa scattare l'anomalia se e solo se nel controllo precedente non era gi\`a stata superata.
-  \item I dati rilevati dai sensori dei parametri sanitari sono salvati (cifrati) nel sistema per permettere al Medico di Turno e al Medico di Base di accedere allo storico recente (< 1 Mese) del paziente.
+  \item I dati rilevati dai sensori dei parametri sanitari sono salvati (cifrati) nel sistema per permettere al Medico di Turno e al Medico di Base di accedere allo storico recente ($< 1$ Mese) del paziente.
   \item Il sistema effettua i controlli solo quando i valori attualizzati si rendono disponibili (la frequenza di rilevazione di ciascuno \`e definita nel Piano Terapeutico).
 \end{itemize}
 
@@ -193,13 +193,13 @@ Si deve progettare un sistema di telemonitoraggio che:
 \paragraph{Le stime}
 \begin{itemize}
   \item Si prende come bacino d'utenza di riferimento l'AUSL di Piacenza.
-  \item L'area ha una popolazione di circa 280K abitanti e di questi il 30 circa percento \`e un assistito fragile (anziani, malati cronici ... etc).
-  \item I medici di base sono circa 170, e ognuno ha circa 1500 assistiti. Di questi, si assume che l'2.5 percento degli assistiti necessiti di cura domiciliare e/o si sottoponga ad un intervento (con piano terapeutico).
+  \item L'area ha una popolazione di circa 280K abitanti e di questi circa il 30 \% \`e un assistito fragile (anziani, malati cronici ... etc).
+  \item I medici di base sono circa 170, e ognuno ha circa 1500 assistiti. Di questi, si assume che il 2.5 \% degli assistiti necessiti di cura domiciliare e/o si sottoponga ad un intervento (con piano terapeutico).
   \item Ovvero, si parla di circa 45 pazienti per medico di base; in totale nel sistema ci possono essere 7.5K assistiti.
-  \item Il numero di emergenze 118 attivate nell'ultimo anno \`e stato 34K; con un p\`o di approssimazione si p\`uo stimare che la probabilit\`a per un cittadino preso a caso di generare un'urgenza \`e del 12 percento.
+  \item Il numero di emergenze 118 attivate nell'ultimo anno \`e stato 34K; con un p\`o di approssimazione si p\`uo stimare che la probabilit\`a per un cittadino preso a caso di generare un'urgenza \`e del 12 \%.
   \item Quindi, nel corso dell'anno ci possono essere in media 930 attivazioni (approssimando a 1000 per stimare anche le anomalie non emergenziali), per un totale di 3 anomalie al giorno.
   % \item Siccome il sistema deve essere pronto a intervenire in qualsiasi momento \footnote{L'incolumit\`a del paziente \`e da salvaguardare a tutti i costi}, nei calcoli sulle frequenze si stimer\`a 1 attivazione al giorno come emergenza e 1 all'ora come anomalia.
-  \item Siccome esistono parametri fisiologici che devono essere acquisiti con frequenze alte frequenze, si stima che un sensore possa in media produrre dati con frequenza di 50 Hz (ovvero 50/secondo).
+  \item Siccome esistono parametri fisiologici che devono essere acquisiti con alte frequenze, si stima che un sensore possa in media produrre dati con frequenza di 50 Hz (ovvero 50/secondo).
 \end{itemize}
 
 \subsection{Casi d'Uso}
@@ -225,7 +225,7 @@ Sono stati identificati i seguenti casi d'uso:
 
 \subsection{Attivita' dei Casi d'Uso}
 
-I casi d'uso a sua volta sono stati divisi nelle seguenti attivit\`a. I diagrammi contengono alcune note:
+I casi d'uso a loro volta sono stati divisi nelle seguenti attivit\`a. I diagrammi contengono alcune note:
 
 \begin{itemize}
   \item In Arancio sono indicate delle informazioni di tipo funzionale.
@@ -255,49 +255,53 @@ Le frequenze sono pi\`u basse rispetto alla rilevazione di parametri sanitari pe
 
 \subsubsection{Invia Dati Paziente}
 
-Si suppone che sia necessario inviare i dati di un paziente circa al massimo una volta al giorno.
+Assumo che l'invio dei dati di un paziente sia strettamente correlato al suo stato anomalo.
 
 \putimage{images/Diagramma delle Attivita'/Invia Dati Paziente.png}{Invia Dati Paziente}{png:act:invia-dati-paziente}{1}
 
 \subsubsection{Monitoraggio Anomalie Sanitarie}
 
 Se le rilevazioni di parametri sono molto frequenti allora anche la loro verifica deve essere altrettanto frequente.
-Si stima che un paziente particolarmente problematico possa avere al massimo 10 crisi l'ora (da l\`i le frequenze di classificazione).
+Vale la stima fatta in precedenza sulle anomalie dei pazienti (circa 3 al giorno).
 Una volta rilevata un'anomalia, la sua classificazione deve essere molto rapida perch\`e alcune patologie sono tempo dipendenti.
 
 \putimage{images/Diagramma delle Attivita'/Monitoraggio Anomalie Sanitarie.png}{Monitoraggio Anomalie Sanitarie}{png:act:monitoraggio-anomalie-sanitarie}{1}
 
 \subsubsection{Gestione Anomalia}
 
-Vale il discorso di prima sulla stima del numero massimo di anomalie per un paziente. Inoltre l'identificazione delle risorse per gestirla (medico di turno, ambulanza e ospedale) deve essere relativamente rapida per la possibile presenza di patologie tempodipendenti. Siccome l'identificazione pu\`o concernere l'accesso di dati in tempo reale per l'allocazione delle risorse e una comunicazione con la centrale operativa, il delay \`e pi\`u rilassato \footnote{\`E un sistema distribuito, dopotutto} e la sua complessit\`a \`e un filo pi\`u complessa rispetto alle altre.
+L'identificazione delle risorse per gestirla (medico di turno, ambulanza e ospedale) deve essere relativamente rapida per la possibile presenza di patologie tempodipendenti.
+Siccome l'identificazione pu\`o concernere l'accesso di dati in tempo reale per l'allocazione delle risorse e una comunicazione con la centrale operativa, il delay \`e pi\`u rilassato \footnote{\`E un sistema distribuito, dopotutto} e la sua complessit\`a \`e un filo pi\`u complessa rispetto alle altre.
 
 \putimage{images/Diagramma delle Attivita'/Gestione Anomalia.png}{Gestione Anomalia}{png:act:gestione-anomalia}{1}
 
 \subsubsection{Controllo Aderenza Piano Terapeutico}
 
-L'aderenza al piano viene controllata una volta al giorno a mezzanotte \textit{Ovvero allo scadere del giorno} e non essendo un'operazione complessa, ma nemmeno eccessivamente prioritaria, pu\`o essere completata in una decina di min.
+L'aderenza al piano viene controllata una volta al giorno a mezzanotte \textit{Ovvero allo scadere del giorno} e non essendo un'operazione complessa, n\`e eccessivamente prioritaria, pu\`o essere completata in una decina di minuti.
 
 \putimage{images/Diagramma delle Attivita'/Controllo Aderenza Piano Terapeutico.png}{Controllo Aderenza Piano Terapeutico}{png:act:controllo-aderenza-piano-terapeutico}{1}
 
 \subsubsection{Definizione Piano Terapeutico}
 
-La ridefinizione del piano terapeutico si stima che possa avvenire al massimo una volta al giorno e deve essere completata entro il tempo di una normale sessione interattiva.
+Si assume che la ridefinizione del piano terapeutica sia strettamente correlata allo stato anomalo del paziente. Quindi valgono le considerazioni precedenti sulle frequenze di gestione delle anomalie.
+La ridefinizione del piano terapeutico deve essere completata entro il tempo di una normale sessione interattiva (di solito 30 minuti).
 
 \putimage{images/Diagramma delle Attivita'/Definizione Piano Terapeutico.png}{Definizione Piano Terapeutico}{png:act:definizione-piano-terapeutico}{1}
 
 \subsubsection{Termina Gestione Anomalia}
 
-La terminazione dell'anomalia gestita si stima che possa avvenire massimo un paio di volte al giorno e, prevedendo un'opzionale dichiarazione di diagnosi, deve essere completata entro il tempo di una normale sessione interattiva.
+Valgono le considerazioni precedenti sulle frequenze di gestione delle anomalie.
+Prevedendo un'opzionale dichiarazione di diagnosi, questa funzione deve essere completata entro il tempo di una normale sessione interattiva (di solito 30 minuti).
 
 \putimage{images/Diagramma delle Attivita'/Termina Gestione Anomalia.png}{Termina Gestione Anomalia}{png:act:termina-gestione-anomalia}{1}
 
 \section{Architettura Logica}
 
-Per l'architettura logica sono state realizzate due opzioni di partizionamento, quindi valutate in termini di metriche AL ai fini di scegliere la pi\`u vantaggiosa.
+Per l'architettura logica sono state realizzate due opzioni di partizionamento che verranno valutate in termini di metriche AL ai fini di scegliere la pi\`u vantaggiosa.
+Per favorire la comprensione, con il termine \textit{modulo} si intende il componente dell'Architettura Logica. Con il termine \textit{componente} ci riferisce invece al concetto di componente dell'Architettura Concreta.
 
 \subsection{Partizionamento livellato}
 
-Il sistema \`e diviso in 4 moduli \footnote{Il \textit{modulo} \`e il componente logico, ho separato la terminologia per favorire la comprensione}:
+Il sistema \`e diviso in 4 moduli:
 \begin{itemize}
   \item \textbf{C4}: Interazione Guidata Umana.
   \item \textbf{C3}: Gestione Emergenze.
@@ -307,7 +311,8 @@ Il sistema \`e diviso in 4 moduli \footnote{Il \textit{modulo} \`e il componente
 
 \bigimage{images/Diagramma delle Attivita'/Partizione Logica Livellata.png}{Partizione Logica Livellata}{png:act:partizione-logica-livellata}{1}
 
-Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al tipo di attivit\`a che sono eseguite e dal grado di intervento umano. Quindi abbiamo una segregazione di tutte le funzioni che richiedono di elaborare dati in un apposito modulo, ivi quelle che acquisiscono dati, ivi la gestione delle emergenze e cos\`i via.
+Nel diagramma sono presenti dei riquadri color rosa che abbozzano una possibile divisione in componenti concreti nella fase successiva.
+Il partizionamento del sistema \`e legato ad un grado di astrazione rispetto al tipo di attivit\`a che sono eseguite e dal grado di intervento umano. Quindi abbiamo una segregazione di tutte le funzioni che richiedono di elaborare dati in un apposito modulo, in un altro quelle che acquisiscono dati, in un altro la gestione delle emergenze e cos\`i via.
 
 \begin{center}
   \resizebox{\linewidth}{!}{
@@ -340,7 +345,7 @@ Il sistema \`e diviso in 4 moduli:
 
 \bigimage{images/Diagramma delle Attivita'/Partizione Logica Settoriale.png}{Partizione Logica Settoriale}{png:act:partizione-logica-settoriale}{1}
 
-Nel diagramma sono presenti dei riquadri color rosa che abbozzano la divisione in componenti concreti della fase successiva.
+Nel diagramma sono presenti dei riquadri color rosa che abbozzano una possibile divisione in componenti concreti nella fase successiva.
 Il partizionamento del sistema \`e legato alla frequenza delle attivit\`a (C1) e al tipo di dato che viene processato (C3, C4) e alla comunicazione interna-esterna nella coordinazione del sistema per raggiungere un obiettivo complesso (C2, la gestione di una anomalia dall'inizio alla fine dell'emergenza).
 Di seguito una valutazione della partizione nelle 9 dimensioni definite:
 
@@ -453,7 +458,7 @@ Inoltre, se un sensore si guasta \`e di fondamentale importanza essere in grado 
 
 \paragraph{Recoverability}
 
-Se il nodo personale va in crash, e perde di conseguenza tutti i dati in memoria centrale, grazie al database locale \`e possibile recuperare le informazioni perse per continuare le operazioni. Il componente \textit{RilevaAnomalie} invece pu\`o continuare a operare come prima siccome utilizza solo gli ultimi dati disponibili provenienti dal buffer (o in alternativa utilizzare l'ultimo record nello storage locale se il dato \`e a bassa frequenza di campionamento).
+Se il nodo personale va in crash, e perde di conseguenza tutti i dati nella memoria volatile, grazie al database locale \`e possibile recuperare le informazioni perse per continuare le operazioni. Il componente \textit{RilevaAnomalie} invece pu\`o continuare a operare come prima siccome utilizza solo gli ultimi dati disponibili provenienti dal buffer (o in alternativa utilizzare l'ultimo record nello storage locale se il dato \`e a bassa frequenza di campionamento).
 
 \paragraph{Observability}
 
@@ -461,6 +466,6 @@ I processi nel nodo centrale possono essere facilmente monitorati, ma anche gli 
 
 \paragraph{Deliverability}
 
-Il nodo personale pu\`o verificare la presenza di aggiornamenti nell'upstream e aggiornare il sistema di conseguenza. \`E preferibile se il nodo personale \`e modulare al punto di poter sostituire intere parti del sistema senza provocare un'interruzione del servizio (\textit{Hot Reloading}).
+Il nodo personale pu\`o verificare la presenza di aggiornamenti nell'upstream e aggiornare il sistema di conseguenza. \`E preferibile se il nodo personale sia modulare al punto di poter sostituire intere parti del sistema senza provocare un'interruzione del servizio (\textit{Hot Reloading}).
 
 \end{document}
